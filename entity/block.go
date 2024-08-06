@@ -20,7 +20,7 @@ func NewBlock(id int, hit_time int, mutex *sync.Mutex) *Block {
 	return &Block{
 		Id:       id,
 		Health:   100,
-		Hit_time: time.Second * time.Duration(hit_time),
+		Hit_time: time.Millisecond * time.Duration(hit_time),
 		mutex:    mutex,
 	}
 }

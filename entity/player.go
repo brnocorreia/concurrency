@@ -1,7 +1,5 @@
 package entity
 
-import "fmt"
-
 type Player struct {
 	Id     int
 	Power  int
@@ -26,5 +24,5 @@ func (p *Player) GetPoints() int {
 
 func (p *Player) AddPoint() {
 	p.Points++
-	fmt.Printf("O player %d tem %d pontos\n", p.Id, p.Points)
+	// fmt.Printf("O player %d tem %d pontos\n", p.Id, p.Points)
 }
