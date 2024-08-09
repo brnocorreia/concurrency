@@ -11,14 +11,45 @@ import (
 	"go.uber.org/zap"
 )
 
+type PriorityMutex struct {
+	normalChan       chan struct{}
+	highPriorityChan chan struct{}
+	mutex            sync.Mutex
+}
+
+func NewPriorityMutex() *PriorityMutex {
+	return &PriorityMutex{
+		normalChan:       make(chan struct{}, 1),
+		highPriorityChan: make(chan struct{}, 1),
+	}
+}
+
+func (pm *PriorityMutex) Lock(highPriority bool) {
+	if highPriority {
+		pm.highPriorityChan <- struct{}{}
+	} else {
+		pm.normalChan <- struct{}{}
+	}
+	pm.mutex.Lock()
+}
+
+func (pm *PriorityMutex) Unlock(highPriority bool) {
+	pm.mutex.Unlock()
+	if highPriority {
+		<-pm.highPriorityChan
+	} else {
+		<-pm.normalChan
+	}
+}
+
 type Block struct {
 	Id       int
 	Health   int
 	Hit_time time.Duration
-	mutex    *sync.Mutex
+	mutex    *PriorityMutex
 }
 
-func NewBlock(id int, mutex *sync.Mutex) *Block {
+func NewBlock(id int) *Block {
 	var hitTime time.Duration
 	if id%2 == 0 {
 		hitTime = 500 * time.Millisecond // Duração de 375ms para ids pares
@@ -29,18 +60,18 @@ func NewBlock(id int, mutex *sync.Mutex) *Block {
 		Id:       id,
 		Health:   100,
 		Hit_time: hitTime,
-		mutex:    mutex,
+		mutex:    NewPriorityMutex(),
 	}
 }
 
 func (b *Block) Hit(player *Player, lockSync chan [4]int, updates chan [4]int, x int, y int) bool {
-	b.mutex.Lock()
+	b.mutex.Lock(false)
 	// Notifica a outra goroutine que o bloco[x][y] está sendo acertado e precisa ser lockado
 	lockSync <- [4]int{player.Id, 0, x, y}
 
 	// Ao retornar, a função dá unlock na sua matriz e notifica a outra para dar unlock também
 	defer func() {
-		b.mutex.Unlock()
+		b.mutex.Unlock(false)
 		lockSync <- [4]int{player.Id, 1, x, y}
 	}()
 
@@ -103,19 +134,19 @@ func syncLocks(lockSync chan [4]int, matrix_1 Matrix, matrix_2 Matrix) {
 		if id == 1 {
 			if op == 0 {
 				// Operação de lock
-				matrix_2[x][y].mutex.Lock()
+				matrix_2[x][y].mutex.Lock(true)
 			} else {
 				// Operação de unlock
-				matrix_2[x][y].mutex.Unlock()
+				matrix_2[x][y].mutex.Unlock(true)
 			}
 		} else {
 			// Se for o player 2, eu preciso lockar na matrix_1
 			if op == 0 {
 				// Operação de lock
-				matrix_1[x][y].mutex.Lock()
+				matrix_1[x][y].mutex.Lock(true)
 			} else {
 				// Operação de unlock
-				matrix_1[x][y].mutex.Unlock()
+				matrix_1[x][y].mutex.Unlock(true)
 			}
 		}
 	}
@@ -131,13 +162,13 @@ func updateMatrix(updates chan [4]int, matrix_1 Matrix, matrix_2 Matrix) {
 	for update := range updates {
 		id, health, x, y := update[0], update[1], update[2], update[3]
 		if id == 1 {
-			matrix_2[x][y].mutex.Lock()
+			matrix_2[x][y].mutex.Lock(true)
 			matrix_2[x][y].Health = health
-			matrix_2[x][y].mutex.Unlock()
+			matrix_2[x][y].mutex.Unlock(true)
 		} else {
-			matrix_1[x][y].mutex.Lock()
+			matrix_1[x][y].mutex.Lock(true)
 			matrix_1[x][y].Health = health
-			matrix_1[x][y].mutex.Unlock()
+			matrix_1[x][y].mutex.Unlock(true)
 		}
 	}
 }
@@ -246,7 +277,7 @@ func NewMatrix(width, height int) Matrix {
 	for i := range matrix {
 		matrix[i] = make([]*Block, width)
 		for j := range matrix[i] {
-			matrix[i][j] = NewBlock(id, &sync.Mutex{})
+			matrix[i][j] = NewBlock(id)
 			id++
 		}
 	}
