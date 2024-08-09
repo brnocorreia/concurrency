@@ -7,6 +7,9 @@ mutex:
 semaphore:
 	go run cmd/semaphore/semaphore.go
 
+message:
+	go run cmd/message-exchange/message.go
+
 gen:
 	go run cmd/generator/generator.go
 
