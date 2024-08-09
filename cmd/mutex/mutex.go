@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"math/rand"
+	"os"
 	"sync"
 	"time"
 
@@ -17,11 +19,17 @@ type Block struct {
 	mutex    *sync.Mutex
 }
 
-func NewBlock(id int, hit_time int, mutex *sync.Mutex) *Block {
+func NewBlock(id int, mutex *sync.Mutex) *Block {
+	var hitTime time.Duration
+	if id%2 == 0 {
+		hitTime = 500 * time.Millisecond // Duração de 375ms para ids pares
+	} else {
+		hitTime = 125 * time.Millisecond // Duração de 250ms para ids ímpares
+	}
 	return &Block{
 		Id:       id,
 		Health:   100,
-		Hit_time: time.Millisecond * time.Duration(hit_time),
+		Hit_time: hitTime,
 		mutex:    mutex,
 	}
 }
@@ -119,13 +127,31 @@ func main() {
 		results <- result
 	}
 
+	logger.Info("Carregando a sequência de ataques...")
+
+	sequence_1, err := loadSequenceFromFile("sequence_1.json")
+	if err != nil {
+		logger.Info("Erro ao carregar a sequência 1")
+		return
+	}
+
+	sequence_2, err := loadSequenceFromFile("sequence_2.json")
+	if err != nil {
+		logger.Info("Erro ao carregar a sequência 2")
+		return
+	}
+
 	// Inicia as goroutines para os dois jogadores
 	wg.Add(2)
-	go attack(player1, generateAttackSequence(matrixSize, numAttacks))
-	go attack(player2, generateAttackSequence(matrixSize, numAttacks))
+	init := time.Now()
+	go attack(player1, sequence_1)
+	go attack(player2, sequence_2)
 
 	// Aguarda até que ambas as goroutines terminem
 	wg.Wait()
+	duration := (time.Since(init))
+
+	logger.Info("Tempo de execução:", zap.Duration("duration", duration))
 
 	close(results)
 
@@ -151,8 +177,7 @@ func NewMatrix(width, height int) Matrix {
 	for i := range matrix {
 		matrix[i] = make([]*Block, width)
 		for j := range matrix[i] {
-			hitTime := rand.Intn(500) + 1
-			matrix[i][j] = NewBlock(id, hitTime, &sync.Mutex{})
+			matrix[i][j] = NewBlock(id, &sync.Mutex{})
 			id++
 		}
 	}
@@ -176,15 +201,17 @@ func printBlocks(matrix Matrix) {
 	}
 }
 
-func generateAttackSequence(size, numAttacks int) [][2]int {
-	sequence := make([][2]int, numAttacks)
-
-	// Preenche a sequência com coordenadas aleatórias
-	for i := 0; i < numAttacks; i++ {
-		x := rand.Intn(size)
-		y := rand.Intn(size)
-		sequence[i] = [2]int{x, y}
+func loadSequenceFromFile(filename string) ([][2]int, error) {
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		return nil, err
 	}
 
-	return sequence
+	var sequence [][2]int
+	err = json.Unmarshal(data, &sequence)
+	if err != nil {
+		return nil, err
+	}
+
+	return sequence, nil
 }
