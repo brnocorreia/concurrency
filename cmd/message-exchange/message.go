@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/brnocorreia/concurrency/config/logger"
+	"github.com/brnocorreia/concurrency/internal/config/logger"
 	"go.uber.org/zap"
 )
 
