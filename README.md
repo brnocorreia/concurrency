@@ -13,7 +13,7 @@ Concurrency is a game developed for study purposes under UFBA's MATA58 course. S
 1. Clone and navigate to the repository:
 
 ```console
-foo@bar:~$ git clone https://github.com/brnocorreia/concurrency.git && cd concurrency
+git clone https://github.com/brnocorreia/concurrency.git && cd concurrency
 ```
 
 ### Running
@@ -21,14 +21,24 @@ foo@bar:~$ git clone https://github.com/brnocorreia/concurrency.git && cd concur
 - You can run the game using the go command (make sure you have Go installed in your machine):
 
 ```console
-foo@bar:~$ go run cmd/main.go
+go run cmd/main.go
 ```
 
-- Or you can use the binary (RECOMMENDED):
+- Or you can use the **recommended** way, which is to use the binary. Make sure to select the correct binary for your OS:
+- We will use the `concurrency-linux-amd64` binary in this guide.
 
 ```console
-foo@bar:~$ ./concurrency
+./bin/concurrency-linux-amd64
 ```
+
+#### Avaiable binaries:
+
+| OS      | ARCH  | Filename                      | Status |
+| ------- | ----- | ----------------------------- | ------ |
+| Linux   | amd64 | concurrency-linux-amd64       | ✅     |
+| Linux   | arm64 | concurrency-linux-arm64       | ✅     |
+| Windows | amd64 | concurrency-windows-amd64.exe | ✅     |
+| macOS   | amd64 | concurrency-darwin-amd64      | ✅     |
 
 ## Usage
 
@@ -37,7 +47,7 @@ foo@bar:~$ ./concurrency
 - The game should be run using the `run` command, as shown below.
 
 ```console
-foo@bar:~$ ./concurrency run
+./bin/concurrency-linux-amd64 run
 ```
 
 - You can use flags to change the game's parameters like the number of attacks of each player, the matrix size, and the player's power (how much damage they can deal with one hit).
@@ -45,7 +55,7 @@ foo@bar:~$ ./concurrency run
 - Feel free to use the `-h` flag to see the available options, but basically, you can use the following:
 
 ```console
-foo@bar:~$ concurrency run -h
+./bin/concurrency-linux-amd64 run -h
 
 Usage:
   concurrency run [flags]
@@ -64,19 +74,19 @@ Flags:
 - Run the game with the default parameters:
 
 ```console
-foo@bar:~$ ./concurrency run
+./bin/concurrency-linux-amd64 run
 ```
 
 - Run the game with a different number of attacks and matrix size:
 
 ```console
-foo@bar:~$ ./concurrency run -a 512 -s 16
+./bin/concurrency-linux-amd64 run -a 512 -s 16
 ```
 
 - Run the game in a specific mode, this is the most important flag:
 
 ```console
-foo@bar:~$ ./concurrency run -m semaphore
+./bin/concurrency-linux-amd64 run -m semaphore
 ```
 
 ## Game Modes
