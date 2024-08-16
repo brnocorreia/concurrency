@@ -99,6 +99,7 @@ func (r *Runner) RunMutex() {
 	fmt.Println("------------------------------------------------")
 
 	for result := range results {
+		logger.Info(result)
 		fmt.Println(result)
 	}
 	logger.Info("Finalizando o jogo para versão MUTEX...")
@@ -156,6 +157,7 @@ func (r *Runner) RunSemaphore() {
 	fmt.Println("------------------------------------------------")
 
 	for result := range results {
+		logger.Info(result)
 		fmt.Println(result)
 	}
 	logger.Info("Finalizando o jogo para versão SEMAPHORE...")
@@ -233,6 +235,7 @@ func (r *Runner) RunMessages() {
 	fmt.Println("------------------------------------------------")
 
 	for result := range results {
+		logger.Info(result)
 		fmt.Println(result)
 	}
 	logger.Info("Finalizando o jogo para versão TROCA DE MENSAGENS...")
