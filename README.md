@@ -25,20 +25,20 @@ go run cmd/main.go
 ```
 
 - Or you can use the **recommended** way, which is to use the binary. Make sure to select the correct binary for your OS:
-- We will use the `concurrency-linux-amd64` binary in this guide.
+- We will use the `concurrency-linux-amd64` binary in this guide. You can clone the entire repo or just download the binary on the table below.
 
 ```console
 ./bin/concurrency-linux-amd64
 ```
 
-#### Avaiable binaries:
+#### Available binaries:
 
-| OS      | ARCH  | Filename                      | Status |
-| ------- | ----- | ----------------------------- | ------ |
-| Linux   | amd64 | concurrency-linux-amd64       | ✅     |
-| Linux   | arm64 | concurrency-linux-arm64       | ✅     |
-| Windows | amd64 | concurrency-windows-amd64.exe | ✅     |
-| macOS   | amd64 | concurrency-darwin-amd64      | ✅     |
+| OS      | ARCH  | Filename                      | Status | Download                                                                                                      |
+| ------- | ----- | ----------------------------- | ------ | ------------------------------------------------------------------------------------------------------------- |
+| Linux   | amd64 | concurrency-linux-amd64       | ✅     | [Download](https://github.com/brnocorreia/concurrency/releases/latest/download/concurrency-linux-amd64)       |
+| Linux   | arm64 | concurrency-linux-arm64       | ✅     | [Download](https://github.com/brnocorreia/concurrency/releases/latest/download/concurrency-linux-arm64)       |
+| Windows | amd64 | concurrency-windows-amd64.exe | ✅     | [Download](https://github.com/brnocorreia/concurrency/releases/latest/download/concurrency-windows-amd64.exe) |
+| macOS   | amd64 | concurrency-darwin-amd64      | ✅     | [Download](https://github.com/brnocorreia/concurrency/releases/latest/download/concurrency-darwin-amd64)      |
 
 ## Usage
 

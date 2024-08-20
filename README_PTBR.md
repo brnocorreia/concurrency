@@ -34,12 +34,12 @@ go run cmd/main.go
 
 #### Binários disponíveis:
 
-| OS      | ARCH  | Nome do arquivo               | Status |
-| ------- | ----- | ----------------------------- | ------ |
-| Linux   | amd64 | concurrency-linux-amd64       | ✅     |
-| Linux   | arm64 | concurrency-linux-arm64       | ✅     |
-| Windows | amd64 | concurrency-windows-amd64.exe | ✅     |
-| macOS   | amd64 | concurrency-darwin-amd64      | ✅     |
+| OS      | ARCH  | Nome do arquivo               | Status | Download                                                                                                      |
+| ------- | ----- | ----------------------------- | ------ | ------------------------------------------------------------------------------------------------------------- |
+| Linux   | amd64 | concurrency-linux-amd64       | ✅     | [Download](https://github.com/brnocorreia/concurrency/releases/latest/download/concurrency-linux-amd64)       |
+| Linux   | arm64 | concurrency-linux-arm64       | ✅     | [Download](https://github.com/brnocorreia/concurrency/releases/latest/download/concurrency-linux-arm64)       |
+| Windows | amd64 | concurrency-windows-amd64.exe | ✅     | [Download](https://github.com/brnocorreia/concurrency/releases/latest/download/concurrency-windows-amd64.exe) |
+| macOS   | amd64 | concurrency-darwin-amd64      | ✅     | [Download](https://github.com/brnocorreia/concurrency/releases/latest/download/concurrency-darwin-amd64)      |
 
 ## Uso
 
